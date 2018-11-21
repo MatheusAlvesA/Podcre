@@ -1,6 +1,7 @@
 package Persistencia;
 
 import java.util.Map;
+import java.util.Vector;
 
 /*
  * Esta interface define a forma como o sistema interage com o banco de dados.
@@ -38,13 +39,14 @@ public interface BancoInterface {
 	 * ou falha no banco de dados
 	 * 
 	 * nome_user, o nome de usuário (Deve existir previamente)
+	 * nome, O nome do episódio de podcast sendo inserido
 	 * n_listeners, o numero de vezes que o audio foi escutado
 	 * n_likes, curtidas
 	 * n_dislikes, DEScurtidas
 	 * url, a URL para o arquivo de audio .mp3
 	 * assunto, O assunto tratado no audio em questão
 	 * */
-	public void insertPodcast(String nome_user, String n_listeners, int n_likes, int n_dislikes, String url, String assunto) throws PersistenciaException;
+	public void insertPodcast(String nome_user, String nome, int n_listeners, int n_likes, int n_dislikes, String url, String assunto) throws PersistenciaException;
 	
 	/*
 	 * Retorna um vetor com todos os audios upados por este usuário
@@ -53,6 +55,6 @@ public interface BancoInterface {
 	 * 
 	 * nome_user, o nome do usuário do qual se quer obter os audios
 	 * */
-	public Map<String, String>[] getPodcast(String nome_user) throws PersistenciaException;
+	public Vector< Map<String, Object> > getPodcast(String nome_user) throws PersistenciaException;
 	
 }

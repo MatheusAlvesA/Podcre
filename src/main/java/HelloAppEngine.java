@@ -1,4 +1,8 @@
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Map;
+import java.util.Vector;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,13 +28,22 @@ public class HelloAppEngine extends HttpServlet {
     response.getWriter().print("Hello App Engine!\r\n");
     
 	Banco b = new Banco();
+	
 	try {
-		b.insertUser("x", "x", "x", "x", "x");
-		response.getWriter().print("INSERIDO");
-	} catch (PersistenciaException e) {
-		// TODO Auto-generated catch block
-		response.getWriter().print("ERRO");
-		e.printStackTrace();
+		
+		Vector< Map<String, Object> > p = b.getPodcast("jovemnerd");
+		
+		//response.getWriter().print(p.get(0).get("assunto"));
+		response.getWriter().print(p.get(0).get("chave"));
+		
+	} catch (Exception e) {
+		
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		String sStackTrace = sw.toString(); // stack trace as a string
+		response.getWriter().print("ERRO: "+sStackTrace);
+		
 	}
 
   }
