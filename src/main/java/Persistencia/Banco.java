@@ -3,12 +3,15 @@ package Persistencia;
 import java.util.Map;
 
 import com.google.appengine.api.NamespaceManager;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Transaction;
+import com.google.cloud.datastore.Datastore;
+import com.google.cloud.datastore.DatastoreOptions;
+import com.google.cloud.datastore.Entity;
 import com.google.cloud.datastore.EntityQuery;
+import com.google.cloud.datastore.FullEntity;
+import com.google.cloud.datastore.FullEntity.Builder;
+import com.google.cloud.datastore.IncompleteKey;
 import com.google.cloud.datastore.Query;
+import com.google.cloud.datastore.QueryResults;
 import com.google.cloud.datastore.StructuredQuery.CompositeFilter;
 import com.google.cloud.datastore.StructuredQuery.PropertyFilter;
 import com.google.cloud.datastore.StructuredQuery.OrderBy;
@@ -22,45 +25,36 @@ public class Banco implements BancoInterface {
 	@Override
 	public void insertUser(String nome_user, String nome_display, String email, String senha, String url_imagem)
 			throws PersistenciaException {
-
-		DatastoreService datastore = null;
-		Transaction txn = null;
-
-		try {
-			datastore = DatastoreServiceFactory.getDatastoreService();
-			txn = (Transaction) datastore.beginTransaction();
-		}
-		catch (Exception e) {throw new PersistenciaException(TipoErro.FALHA_AO_ACESSAR);}
 		
 		try {
 			
-			EntityQuery query = Query.newEntityQueryBuilder()
-				    .setKind("Task")
-				    .setFilter(CompositeFilter.and(
-				        PropertyFilter.eq("done", false), PropertyFilter.ge("priority", 4)))
-				    .setOrderBy(OrderBy.desc("priority"))
-				    .build();
+			Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 			
-			Entity novo = new Entity("Usuarios", nome_user);
-
-			novo.setProperty("nome_user", nome_user);
-	
-			datastore.put(novo);
-			txn.commit();
+			Builder<IncompleteKey> entityBuilder = Entity.newBuilder();
+			entityBuilder.set("Nome", "Valor");
+			FullEntity<IncompleteKey> entity = entityBuilder.build();
+			datastore.put(entity);
+			
 		}
 		catch (Exception e) {
 			throw new PersistenciaException(TipoErro.FALHA_AO_ACESSAR);
-		}
-		finally {
-			if (txn.isActive()) { // Não foi comitada
-				txn.rollback();
-			}
 		}
 	}
 
 	@Override
 	public Map<String, String> getUser(String nome_user) throws PersistenciaException {
-		// TODO Auto-generated method stub
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+		EntityQuery query = Query.newEntityQueryBuilder()
+			    .setKind("Usuario")
+			    .setFilter(CompositeFilter.and(
+			        PropertyFilter.eq("user_name", nome_user)))
+			    .build();
+		QueryResults<Entity> tasks = datastore.run(query);
+		
+		Entity e = tasks.next();
+		
+		//TODO
+		
 		return null;
 	}
 
@@ -76,5 +70,5 @@ public class Banco implements BancoInterface {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 }
