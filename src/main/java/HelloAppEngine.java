@@ -30,12 +30,13 @@ public class HelloAppEngine extends HttpServlet {
 	Banco b = new Banco();
 	
 	try {
-		
+		/*
 		b.like("5631986051842048");
 		b.disLike("5631986051842048");
 		b.listened("5631986051842048");
+		*/
 		
-		response.getWriter().print("FEITO");
+		response.getWriter().print(b.listarNomes().get(0));
 		
 	} catch (Exception e) {
 		

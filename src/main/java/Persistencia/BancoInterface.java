@@ -80,4 +80,12 @@ public interface BancoInterface {
 	 * ou em caso de falha ao acessar o banco de dados
 	 * */
 	public void listened(String id) throws PersistenciaException;
+	
+	/*
+	 * Esta função deleta um podcast dado o seu ID
+	 * 
+	 * Pode lançar PersistenciaException em caso de não encontrar o podcast
+	 * ou em caso de falha ao acessar o banco de dados
+	 * */
+	public void delete(String id) throws PersistenciaException;
 }

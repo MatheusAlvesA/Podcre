@@ -242,4 +242,41 @@ public class Banco implements BancoInterface {
 		}
 		
 	}
+	
+	@Override
+	public void delete(String id) throws PersistenciaException {
+		try {
+			
+			Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+			KeyFactory kf = datastore.newKeyFactory().setKind("Podcast");
+			Key chave = kf.newKey(Long.parseLong(id));
+			
+			datastore.delete(chave);
+			
+		}
+		catch (Exception e) {
+			PersistenciaException Nova = new PersistenciaException(e);
+			Nova.setCodError(TipoErro.FALHA_AO_ACESSAR);
+			throw Nova;
+		}
+		
+	}
+	
+	public Vector<String> listarNomes() {
+		Vector<String> retorno = new Vector<String>();
+		
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+		EntityQuery query = Query.newEntityQueryBuilder()
+			    .setKind("Podcast")
+			    .build();
+		QueryResults<Entity> podcast = datastore.run(query);
+		
+		while(podcast.hasNext()) {
+			Entity temp = podcast.next();
+			retorno.add(temp.getString("nome_user"));
+		}
+		
+		return retorno;
+	}
 }
