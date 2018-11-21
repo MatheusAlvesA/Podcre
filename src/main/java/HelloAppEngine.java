@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Persistencia.Banco;
+import Persistencia.Cache;
 import Persistencia.PersistenciaException;
 
 @WebServlet(
@@ -28,6 +29,7 @@ public class HelloAppEngine extends HttpServlet {
     response.getWriter().print("Hello App Engine!\r\n");
     
 	Banco b = new Banco();
+	Cache c = new Cache();
 	
 	try {
 		/*
@@ -35,8 +37,9 @@ public class HelloAppEngine extends HttpServlet {
 		b.disLike("5631986051842048");
 		b.listened("5631986051842048");
 		*/
-		
-		response.getWriter().print(b.listarNomes().get(0));
+		c.set("teste", b.listarNomes(), 60*2);
+		Vector<String> vector = (Vector<String>)c.get("teste");
+		response.getWriter().print(vector.get(0));
 		
 	} catch (Exception e) {
 		
