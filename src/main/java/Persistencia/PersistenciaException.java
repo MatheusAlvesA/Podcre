@@ -4,7 +4,7 @@ public class PersistenciaException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public enum TipoErro  {
-	    DUPLICADO;
+	    DUPLICADO, FALHA_AO_ACESSAR;
 	}
 	
 	private TipoErro codError;
