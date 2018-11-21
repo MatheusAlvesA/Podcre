@@ -48,10 +48,10 @@ public interface BancoInterface {
 	 * n_listeners, o numero de vezes que o audio foi escutado
 	 * n_likes, curtidas
 	 * n_dislikes, DEScurtidas
-	 * url, a URL para o arquivo de audio .mp3
+	 * key_blob, a chave para o arquivo de audio .mp3 no Blobstore
 	 * assunto, O assunto tratado no audio em questão
 	 * */
-	public void insertPodcast(String nome_user, String nome, int n_listeners, int n_likes, int n_dislikes, String url, String assunto) throws PersistenciaException;
+	public void insertPodcast(String nome_user, String nome, int n_listeners, int n_likes, int n_dislikes, String key_blob, String assunto) throws PersistenciaException;
 	
 	/*
 	 * Retorna um vetor com todos os audios upados por este usuário
@@ -93,4 +93,9 @@ public interface BancoInterface {
 	 * ou em caso de falha ao acessar o banco de dados
 	 * */
 	public void delete(String id) throws PersistenciaException;
+	
+	/*
+	 * Retorna uma lista de todos os nomes de usuários
+	 * */
+	public Vector<String> listarNomes();
 }

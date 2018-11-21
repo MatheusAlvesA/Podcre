@@ -127,7 +127,7 @@ public class Banco implements BancoInterface {
 	}
 
 	@Override
-	public void insertPodcast(String nome_user, String nome, int n_listeners, int n_likes, int n_dislikes, String url,
+	public void insertPodcast(String nome_user, String nome, int n_listeners, int n_likes, int n_dislikes, String key_blob,
 			String assunto) throws PersistenciaException {
 		
 		try {
@@ -141,7 +141,7 @@ public class Banco implements BancoInterface {
 			entityBuilder.set("n_listeners", n_listeners);
 			entityBuilder.set("n_likes", n_likes);
 			entityBuilder.set("n_dislikes", n_dislikes);
-			entityBuilder.set("key_blob", url);
+			entityBuilder.set("key_blob", key_blob);
 			entityBuilder.set("assunto", assunto);
 			entityBuilder.set("nome", nome);
 			
