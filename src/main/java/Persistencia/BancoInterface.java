@@ -20,9 +20,14 @@ public interface BancoInterface {
 	 * nome_display, o nome que será mostrado aos visitantes desse usuário
 	 * email, o email do usuário(deve ser único)
 	 * senha, a senha do usuário (Não será criptografada antes de ser inserida no banco)
-	 * url_imagem, A url da localização da imagem deste usuário
+	 * imagem_blob, A key da localização da imagem deste usuário
 	 * */
-	public void insertUser(String nome_user, String nome_display, String email, String senha, String url_imagem) throws PersistenciaException;
+	public void insertUser(String nome_user, String nome_display, String email, String senha, String imagem_blob) throws PersistenciaException;
+	
+	/*
+	 * Seta a imagem de perfil de um usuário previamente inserido no banco
+	 * */
+	public void setImagem(String chave, String blob) throws PersistenciaException;
 	
 	/*
 	 * Retorna um usuário dado seu nome de usuário único

@@ -46,7 +46,7 @@ public class Banco implements BancoInterface {
 			entityBuilder.set("nome_display", nome_display);
 			entityBuilder.set("email", email);
 			entityBuilder.set("senha", senha);
-			entityBuilder.set("url_imagem", url_imagem);
+			entityBuilder.set("imagem_blob", url_imagem);
 			
 			FullEntity<IncompleteKey> entity = entityBuilder.build();
 			datastore.put(entity);
@@ -60,6 +60,34 @@ public class Banco implements BancoInterface {
 
 	}
 
+	@Override
+	public void setImagem(String nome_user, String blob) throws PersistenciaException {
+		
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+		String chave_user = this.getUser(nome_user).get("chave");
+		
+		KeyFactory kf = datastore.newKeyFactory().setKind("Usuarios");
+		Key chave = kf.newKey(Long.parseLong(chave_user));
+
+		Entity temp = datastore.get(chave);
+		
+		if(temp == null)
+			throw new PersistenciaException(TipoErro.NOT_FOUND);
+
+		try {
+			Entity u = Entity.newBuilder(temp).set("imagem_blob", blob).build();
+			
+			datastore.update(u);
+		}
+		catch (Exception e) {
+			PersistenciaException Nova = new PersistenciaException(e);
+			Nova.setCodError(TipoErro.FALHA_AO_ACESSAR);
+			throw Nova;
+		}
+		
+	}
+	
 	@Override
 	public Map<String, String> getUser(String nome_user) throws PersistenciaException {
 		
@@ -92,7 +120,8 @@ public class Banco implements BancoInterface {
 		retorno.put("nome_display", e.getString("nome_display"));
 		retorno.put("email", e.getString("email"));
 		retorno.put("senha", e.getString("senha"));
-		retorno.put("url_imagem", e.getString("url_imagem"));
+		retorno.put("imagem_blob", e.getString("url_imagem"));
+		retorno.put("chave", e.getKey().getId().toString());
 		
 		return retorno;
 	}
@@ -112,7 +141,7 @@ public class Banco implements BancoInterface {
 			entityBuilder.set("n_listeners", n_listeners);
 			entityBuilder.set("n_likes", n_likes);
 			entityBuilder.set("n_dislikes", n_dislikes);
-			entityBuilder.set("url", url);
+			entityBuilder.set("key_blob", url);
 			entityBuilder.set("assunto", assunto);
 			entityBuilder.set("nome", nome);
 			
@@ -150,12 +179,12 @@ public class Banco implements BancoInterface {
 			Entity e = podcast.next();
 			Map<String, Object> novo = new HashMap<String, Object>();
 			
-			novo.put("chave", e.getKey()/*.getId()*/);
+			novo.put("chave", e.getKey().getId());
 			novo.put("nome_user", e.getString("nome_user"));
 			novo.put("n_listeners",  (int) e.getLong("n_listeners") );
 			novo.put("n_likes",  (int) e.getLong("n_likes") );
 			novo.put("n_dislikes", (int) e.getLong("n_dislikes") );
-			novo.put("url", e.getString("url"));
+			novo.put("key_blob", e.getString("url"));
 			novo.put("nome", e.getString("nome"));
 			novo.put("assunto", e.getString("assunto"));
 			

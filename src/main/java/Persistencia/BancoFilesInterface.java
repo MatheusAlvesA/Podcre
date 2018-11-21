@@ -29,4 +29,9 @@ public interface BancoFilesInterface {
 	 * pode lançar PersistenciaException em caso de falha na cloud
 	 * */
 	public String gerarURL(String endpoint) throws PersistenciaException;
+	
+	/*
+	 * Esta função deleta um arquivo previamente armazenado na cloud
+	 * */
+	public Boolean delete(String chave) throws PersistenciaException;
 }

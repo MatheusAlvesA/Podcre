@@ -32,15 +32,14 @@ public class HelloAppEngine extends HttpServlet {
 	Cache c = new Cache();
 	
 	try {
+		
+		b.delete("5631986051842048");
+		
 		/*
-		b.like("5631986051842048");
-		b.disLike("5631986051842048");
-		b.listened("5631986051842048");
-		*/
 		c.set("teste", b.listarNomes(), 60*2);
 		Vector<String> vector = (Vector<String>)c.get("teste");
 		response.getWriter().print(vector.get(0));
-		
+		*/
 	} catch (Exception e) {
 		
 		StringWriter sw = new StringWriter();

@@ -51,6 +51,21 @@ public class BancoFiles implements BancoFilesInterface {
 	}
 	
 	@Override
+	public Boolean delete(String chave) throws PersistenciaException {
+		try {
+			BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+		    BlobKey blobKey = new BlobKey(chave);
+		    blobstoreService.delete(blobKey);
+		    return true;
+		}
+		catch (Exception e) {
+			PersistenciaException Nova = new PersistenciaException(e);
+			Nova.setCodError(TipoErro.FALHA_AO_ACESSAR);
+			throw Nova;
+		}
+	}
+	
+	@Override
 	public String gerarURL(String endpoint) throws PersistenciaException {
 		try {
 			BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
