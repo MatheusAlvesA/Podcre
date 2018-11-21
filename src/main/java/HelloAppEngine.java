@@ -31,10 +31,11 @@ public class HelloAppEngine extends HttpServlet {
 	
 	try {
 		
-		Vector< Map<String, Object> > p = b.getPodcast("jovemnerd");
+		b.like("5631986051842048");
+		b.disLike("5631986051842048");
+		b.listened("5631986051842048");
 		
-		//response.getWriter().print(p.get(0).get("assunto"));
-		response.getWriter().print(p.get(0).get("chave"));
+		response.getWriter().print("FEITO");
 		
 	} catch (Exception e) {
 		

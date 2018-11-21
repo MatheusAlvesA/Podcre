@@ -57,4 +57,27 @@ public interface BancoInterface {
 	 * */
 	public Vector< Map<String, Object> > getPodcast(String nome_user) throws PersistenciaException;
 	
+	/*
+	 * Esta função adiciona um like ao podcast cujo id foi passado
+	 * 
+	 * Pode lançar PersistenciaException em caso de não encontrar o podcast
+	 * ou em caso de falha ao acessar o banco de dados
+	 * */
+	public void like(String id) throws PersistenciaException;
+	
+	/*
+	 * Esta função adiciona um dislike ao podcast cujo id foi passado
+	 * 
+	 * Pode lançar PersistenciaException em caso de não encontrar o podcast
+	 * ou em caso de falha ao acessar o banco de dados
+	 * */
+	public void disLike(String id) throws PersistenciaException;
+	
+	/*
+	 * Esta função adiciona um listener ao podcast cujo id foi passado
+	 * 
+	 * Pode lançar PersistenciaException em caso de não encontrar o podcast
+	 * ou em caso de falha ao acessar o banco de dados
+	 * */
+	public void listened(String id) throws PersistenciaException;
 }

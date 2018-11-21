@@ -30,6 +30,12 @@ public class Banco implements BancoInterface {
 			throws PersistenciaException {
 		
 		try {
+			this.getUser(nome_user);
+			throw new PersistenciaException(TipoErro.DUPLICADO);
+		}
+		catch (PersistenciaException ex){/* Neste caso o usuário ainda não existe no banco */}
+		
+		try {
 			
 			Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 			KeyFactory keyFactory = datastore.newKeyFactory();
@@ -144,7 +150,7 @@ public class Banco implements BancoInterface {
 			Entity e = podcast.next();
 			Map<String, Object> novo = new HashMap<String, Object>();
 			
-			novo.put("chave", e.getKey().getId());
+			novo.put("chave", e.getKey()/*.getId()*/);
 			novo.put("nome_user", e.getString("nome_user"));
 			novo.put("n_listeners",  (int) e.getLong("n_listeners") );
 			novo.put("n_likes",  (int) e.getLong("n_likes") );
@@ -159,4 +165,81 @@ public class Banco implements BancoInterface {
 		return retorno;
 	}
 	
+	@Override
+	public void like(String id) throws PersistenciaException {
+		
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+		KeyFactory kf = datastore.newKeyFactory().setKind("Podcast");
+		Key chave = kf.newKey(Long.parseLong(id));
+
+		Entity temp = datastore.get(chave);
+		
+		if(temp == null)
+			throw new PersistenciaException(TipoErro.NOT_FOUND);
+
+		try {
+			Entity podcast = Entity.newBuilder(temp).set("n_likes", temp.getLong("n_likes")+1).build();
+			
+			datastore.update(podcast);
+		}
+		catch (Exception e) {
+			PersistenciaException Nova = new PersistenciaException(e);
+			Nova.setCodError(TipoErro.FALHA_AO_ACESSAR);
+			throw Nova;
+		}
+		
+	}
+	
+	@Override
+	public void disLike(String id) throws PersistenciaException {
+		
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+		KeyFactory kf = datastore.newKeyFactory().setKind("Podcast");
+		Key chave = kf.newKey(Long.parseLong(id));
+
+		Entity temp = datastore.get(chave);
+		
+		if(temp == null)
+			throw new PersistenciaException(TipoErro.NOT_FOUND);
+
+		try {
+			Entity podcast = Entity.newBuilder(temp).set("n_dislikes", temp.getLong("n_dislikes")+1).build();
+			
+			datastore.update(podcast);
+		}
+		catch (Exception e) {
+			PersistenciaException Nova = new PersistenciaException(e);
+			Nova.setCodError(TipoErro.FALHA_AO_ACESSAR);
+			throw Nova;
+		}
+		
+	}
+	
+	@Override
+	public void listened(String id) throws PersistenciaException {
+		
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+
+		KeyFactory kf = datastore.newKeyFactory().setKind("Podcast");
+		Key chave = kf.newKey(Long.parseLong(id));
+
+		Entity temp = datastore.get(chave);
+		
+		if(temp == null)
+			throw new PersistenciaException(TipoErro.NOT_FOUND);
+
+		try {
+			Entity podcast = Entity.newBuilder(temp).set("n_listeners", temp.getLong("n_listeners")+1).build();
+			
+			datastore.update(podcast);
+		}
+		catch (Exception e) {
+			PersistenciaException Nova = new PersistenciaException(e);
+			Nova.setCodError(TipoErro.FALHA_AO_ACESSAR);
+			throw Nova;
+		}
+		
+	}
 }
