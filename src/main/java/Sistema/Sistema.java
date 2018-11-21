@@ -39,81 +39,155 @@ public class Sistema implements SistemaInterface {
 	}
 
 	@Override
-	public Boolean setImagem(String blob) {
-		// TODO Auto-generated method stub
-		return null;
+	public Boolean setImagem(String nome_user, String blob) {
+		try {
+			this.banco.setImagem(nome_user, blob);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public Vector<Map<String, Object>> getPodcasts(String nome_user) {
-		// TODO Auto-generated method stub
-		return null;
+		Vector<Map<String, Object>> retorno = new Vector<Map<String, Object>>();
+		
+		try {
+			retorno = this.banco.getPodcast(nome_user);
+		}
+		catch (PersistenciaException e) {
+			// TODO: handle exception
+		}
+		
+		return retorno;
 	}
 
 	@Override
 	public Map<String, String> getUser(String nome_user) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, String> retorno = null;
+		
+		try {
+			retorno = this.banco.getUser(nome_user);
+		}
+		catch (PersistenciaException e) {
+			// TODO: handle exception
+		}
+		
+		return retorno;
 	}
 
 	@Override
 	public Vector<String> listarNomes() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			Vector<String> r = (Vector<String>) this.cache.get("listaUsers");
+			if(r == null)
+				return this.banco.listarNomes();
+			else
+				return r;
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			return this.banco.listarNomes();
+		}
 	}
 
 	@Override
 	public Boolean computarLike(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			this.banco.like(id);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public Boolean computarDisLike(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			this.banco.disLike(id);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public Boolean computarListened(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			this.banco.listened(id);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	@Override
-	public void insertPodcast(String nome_user, String nome, String key_blob, String assunto) {
-		// TODO Auto-generated method stub
-
+	public Boolean insertPodcast(String nome_user, String nome, String key_blob, String assunto) {
+		try {
+			this.banco.insertPodcast(nome_user, nome, 0, 0, 0, key_blob, assunto);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public String getURLUploadPodcast() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return this.bancoFiles.gerarURL("/podcastUp");
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 	}
 
 	@Override
 	public String getURLUploadImagem() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return this.bancoFiles.gerarURL("/imagemUp");
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 	}
 
 	@Override
 	public String uploadPodcast(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return this.bancoFiles.receberArquivo(request);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 	}
 
 	@Override
 	public String uploadImagem(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return this.bancoFiles.receberArquivo(request);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			return null;
+		}
 	}
 
 	@Override
 	public Boolean download(HttpServletResponse response, String chave) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			this.bancoFiles.enviarArquivo(response, chave);
+		} catch (PersistenciaException e) {
+			// TODO Auto-generated catch block
+			return false;
+		}
+		return true;
 	}
 
 }

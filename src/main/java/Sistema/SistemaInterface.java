@@ -26,7 +26,7 @@ public interface SistemaInterface {
 	/*
 	 * Associa a chave de uma imagem upada para o blob a um usuario
 	 * */
-	public Boolean setImagem(String blob);
+	public Boolean setImagem(String nome_user, String blob);
 	
 	/*
 	 * Retorna um vetor com todos os audios upados por este usuário
@@ -61,7 +61,7 @@ public interface SistemaInterface {
 	 * key_blob, a key blob para o arquivo de audio .mp3
 	 * assunto, O assunto tratado no audio em questão
 	 * */
-	public void insertPodcast(String nome_user, String nome, String key_blob, String assunto);
+	public Boolean insertPodcast(String nome_user, String nome, String key_blob, String assunto);
 	
 	/*
 	 * Retorna uma url para onde o upload de um arquivo deve ser direcionado

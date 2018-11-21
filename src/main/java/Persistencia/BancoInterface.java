@@ -27,7 +27,7 @@ public interface BancoInterface {
 	/*
 	 * Seta a imagem de perfil de um usuário previamente inserido no banco
 	 * */
-	public void setImagem(String chave, String blob) throws PersistenciaException;
+	public void setImagem(String nome_user, String blob) throws PersistenciaException;
 	
 	/*
 	 * Retorna um usuário dado seu nome de usuário único
