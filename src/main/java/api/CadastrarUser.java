@@ -7,6 +7,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import Sistema.Sistema;
 import Sistema.SistemaInterface;
 
@@ -31,10 +35,25 @@ public class CadastrarUser extends HttpServlet {
 	    response.setCharacterEncoding("UTF-8");
 	    response.addHeader("Access-Control-Allow-Origin", "*");
 	    
-	    if(this.sistema.inserirUsuario(request.getParameter("nome"), request.getParameter("display"), request.getParameter("email"), request.getParameter("senha")))
-	    	response.getWriter().write("{\"status\": \"ok\"}");
-	    else
+	    String corpo = IOUtils.toString(request.getReader());
+	    
+    	JSONObject corpoJSON = null;
+    	try {
+    		corpoJSON = new JSONObject(corpo);
+    	}
+    	catch(JSONException e) {
+	    	response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 	    	response.getWriter().write("{\"status\": \"erro\"}");
+    	}
+	    
+	    if(this.sistema.inserirUsuario(corpoJSON.getString("nome"), corpoJSON.getString("display"), corpoJSON.getString("email"), corpoJSON.getString("senha"))) {
+	    	response.setStatus(HttpServletResponse.SC_CREATED);
+	    	response.getWriter().write("{\"status\": \"ok\"}");
+	    }
+	    else {
+	    	response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	    	response.getWriter().write("{\"status\": \"erro\"}");
+	    }
 	    
 	  }
 }
