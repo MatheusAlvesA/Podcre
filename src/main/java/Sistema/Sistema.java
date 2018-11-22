@@ -29,7 +29,7 @@ public class Sistema implements SistemaInterface {
 	@Override
 	public Boolean inserirUsuario(String nome_user, String nome_display, String email, String senha) {
 		try {
-			this.banco.insertUser(nome_user, nome_display, email, senha, "");
+			this.banco.insertUser(nome_user, nome_display, email, this.encriptar(senha), "");
 		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -189,5 +189,7 @@ public class Sistema implements SistemaInterface {
 		}
 		return true;
 	}
+	
+	private String encriptar(String original) {return org.apache.commons.codec.digest.DigestUtils.sha256Hex(original);}
 
 }
