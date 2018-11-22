@@ -1,6 +1,9 @@
 package api;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,12 +14,14 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.appengine.api.NamespaceManager;
+
 import Sistema.Sistema;
 import Sistema.SistemaInterface;
 
 @WebServlet(
 	    name = "CadastroUser",
-	    urlPatterns = {"/api/cadastrarUser"}
+	    urlPatterns = {"/api/user"}
 	)
 public class CadastrarUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -27,33 +32,81 @@ public class CadastrarUser extends HttpServlet {
 		this.sistema = new Sistema();
 	}
 	
-	  @Override
-	  public void doPost(HttpServletRequest request, HttpServletResponse response) 
+	@Override
+	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	      throws IOException {
-
+		
+		NamespaceManager.set("Podcre");
+		
+		  try {
+		    response.setContentType("application/json");
+		    response.setCharacterEncoding("UTF-8");
+		    response.addHeader("Access-Control-Allow-Origin", "*");
+		    
+		    String corpo = IOUtils.toString(request.getReader());
+		    
+	    	JSONObject corpoJSON = null;
+	    	try {
+	    		corpoJSON = new JSONObject(corpo);
+	    	}
+	    	catch(JSONException e) {
+		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		    	response.getWriter().write("{\"status\": \"erro\"}");
+		    	return;
+	    	}
+		    
+		    if(this.sistema.inserirUsuario(corpoJSON.getString("nome"), corpoJSON.getString("display"), corpoJSON.getString("email"), corpoJSON.getString("senha"))) {
+		    	response.setStatus(HttpServletResponse.SC_CREATED);
+		    	response.getWriter().write("{\"status\": \"ok\"}");
+		    }
+		    else {
+		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		    	response.getWriter().write("{\"status\": \"erro\"}");
+		    }
+		}
+		catch (Exception e) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			String sStackTrace = sw.toString(); // stack trace as a string
+			response.getWriter().print(sStackTrace);
+		}
+	    
+	}
+	  
+	  
+	  @Override
+	  public void doGet(HttpServletRequest request, HttpServletResponse response) 
+	      throws IOException {
+		  
+		  NamespaceManager.set("Podcre");
+		  
+try {
 	    response.setContentType("application/json");
 	    response.setCharacterEncoding("UTF-8");
 	    response.addHeader("Access-Control-Allow-Origin", "*");
+
+	    Map<String, String> user = sistema.getUser(request.getParameter("nome"));
 	    
-	    String corpo = IOUtils.toString(request.getReader());
-	    
-    	JSONObject corpoJSON = null;
-    	try {
-    		corpoJSON = new JSONObject(corpo);
-    	}
-    	catch(JSONException e) {
-	    	response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+	    if(user == null) {
+	    	response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 	    	response.getWriter().write("{\"status\": \"erro\"}");
-    	}
+	    	return;
+	    }
 	    
-	    if(this.sistema.inserirUsuario(corpoJSON.getString("nome"), corpoJSON.getString("display"), corpoJSON.getString("email"), corpoJSON.getString("senha"))) {
-	    	response.setStatus(HttpServletResponse.SC_CREATED);
-	    	response.getWriter().write("{\"status\": \"ok\"}");
-	    }
-	    else {
-	    	response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-	    	response.getWriter().write("{\"status\": \"erro\"}");
-	    }
+	    JSONObject corpoJSON = new JSONObject(user);
+	    
+    	response.setStatus(HttpServletResponse.SC_OK);
+    	response.getWriter().write("{\"status\": \"ok\", \"data\": " + corpoJSON.toString() + "}");
+    	
+}
+catch (Exception e) {
+	StringWriter sw = new StringWriter();
+	PrintWriter pw = new PrintWriter(sw);
+	e.printStackTrace(pw);
+	String sStackTrace = sw.toString(); // stack trace as a string
+	response.getWriter().print(sStackTrace);
+}
 	    
 	  }
 }

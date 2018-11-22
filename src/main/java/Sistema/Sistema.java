@@ -32,7 +32,6 @@ public class Sistema implements SistemaInterface {
 			this.banco.insertUser(nome_user, nome_display, email, this.encriptar(senha), "");
 		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return false;
 		}
 		return true;

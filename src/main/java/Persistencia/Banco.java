@@ -26,14 +26,16 @@ public class Banco implements BancoInterface {
 	public Banco() {NamespaceManager.set("Podcre");}
 	
 	@Override
-	public void insertUser(String nome_user, String nome_display, String email, String senha, String url_imagem)
+	public void insertUser(String nome_user, String nome_display, String email, String senha, String imagem_blob)
 			throws PersistenciaException {
 		
+		Map<String, String> temp = null;
 		try {
-			this.getUser(nome_user);
-			throw new PersistenciaException(TipoErro.DUPLICADO);
+			temp = this.getUser(nome_user);
 		}
 		catch (PersistenciaException ex){/* Neste caso o usuário ainda não existe no banco */}
+		if(temp != null) // Se o usuário já existe no banco
+			throw new PersistenciaException(TipoErro.DUPLICADO);
 		
 		try {
 			
@@ -46,7 +48,7 @@ public class Banco implements BancoInterface {
 			entityBuilder.set("nome_display", nome_display);
 			entityBuilder.set("email", email);
 			entityBuilder.set("senha", senha);
-			entityBuilder.set("imagem_blob", url_imagem);
+			entityBuilder.set("imagem_blob", imagem_blob);
 			
 			FullEntity<IncompleteKey> entity = entityBuilder.build();
 			datastore.put(entity);
@@ -90,6 +92,7 @@ public class Banco implements BancoInterface {
 	
 	@Override
 	public Map<String, String> getUser(String nome_user) throws PersistenciaException {
+		NamespaceManager.set("Podcre");
 		
 		QueryResults<Entity> tasks = null;
 		try {
@@ -120,7 +123,7 @@ public class Banco implements BancoInterface {
 		retorno.put("nome_display", e.getString("nome_display"));
 		retorno.put("email", e.getString("email"));
 		retorno.put("senha", e.getString("senha"));
-		retorno.put("imagem_blob", e.getString("url_imagem"));
+		retorno.put("imagem_blob", e.getString("imagem_blob"));
 		retorno.put("chave", e.getKey().getId().toString());
 		
 		return retorno;
