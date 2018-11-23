@@ -43,7 +43,6 @@ public class Sistema implements SistemaInterface {
 			this.banco.setImagem(nome_user, blob);
 		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -86,7 +85,6 @@ public class Sistema implements SistemaInterface {
 			else
 				return r;
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
 			return this.banco.listarNomes();
 		}
 	}

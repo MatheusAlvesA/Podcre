@@ -28,6 +28,7 @@ public class Banco implements BancoInterface {
 	@Override
 	public void insertUser(String nome_user, String nome_display, String email, String senha, String imagem_blob)
 			throws PersistenciaException {
+		NamespaceManager.set("Podcre");
 		
 		Map<String, String> temp = null;
 		try {
@@ -64,12 +65,13 @@ public class Banco implements BancoInterface {
 
 	@Override
 	public void setImagem(String nome_user, String blob) throws PersistenciaException {
+		NamespaceManager.set("Podcre");
 		
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
 		String chave_user = this.getUser(nome_user).get("chave");
 		
-		KeyFactory kf = datastore.newKeyFactory().setKind("Usuarios");
+		KeyFactory kf = datastore.newKeyFactory().setKind("Usuario");
 		Key chave = kf.newKey(Long.parseLong(chave_user));
 
 		Entity temp = datastore.get(chave);
@@ -132,6 +134,7 @@ public class Banco implements BancoInterface {
 	@Override
 	public void insertPodcast(String nome_user, String nome, int n_listeners, int n_likes, int n_dislikes, String key_blob,
 			String assunto) throws PersistenciaException {
+		NamespaceManager.set("Podcre");
 		
 		try {
 			
@@ -162,6 +165,8 @@ public class Banco implements BancoInterface {
 
 	@Override
 	public Vector< Map<String, Object> > getPodcast(String nome_user) throws PersistenciaException {
+		NamespaceManager.set("Podcre");
+		
 		QueryResults<Entity> podcast = null;
 		try {
 			Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
@@ -199,6 +204,7 @@ public class Banco implements BancoInterface {
 	
 	@Override
 	public void like(String id) throws PersistenciaException {
+		NamespaceManager.set("Podcre");
 		
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
@@ -225,6 +231,7 @@ public class Banco implements BancoInterface {
 	
 	@Override
 	public void disLike(String id) throws PersistenciaException {
+		NamespaceManager.set("Podcre");
 		
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
@@ -251,6 +258,7 @@ public class Banco implements BancoInterface {
 	
 	@Override
 	public void listened(String id) throws PersistenciaException {
+		NamespaceManager.set("Podcre");
 		
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 
@@ -277,6 +285,8 @@ public class Banco implements BancoInterface {
 	
 	@Override
 	public void delete(String id) throws PersistenciaException {
+		NamespaceManager.set("Podcre");
+		
 		try {
 			
 			Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
@@ -296,16 +306,18 @@ public class Banco implements BancoInterface {
 	}
 	
 	public Vector<String> listarNomes() {
+		NamespaceManager.set("Podcre");
+		
 		Vector<String> retorno = new Vector<String>();
 		
 		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
 		EntityQuery query = Query.newEntityQueryBuilder()
-			    .setKind("Podcast")
+			    .setKind("Usuario")
 			    .build();
-		QueryResults<Entity> podcast = datastore.run(query);
+		QueryResults<Entity> lista = datastore.run(query);
 		
-		while(podcast.hasNext()) {
-			Entity temp = podcast.next();
+		while(lista.hasNext()) {
+			Entity temp = lista.next();
 			retorno.add(temp.getString("nome_user"));
 		}
 		
