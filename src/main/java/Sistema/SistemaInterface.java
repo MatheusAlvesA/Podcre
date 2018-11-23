@@ -91,4 +91,9 @@ public interface SistemaInterface {
 	 * Executa o download de um arquivo direto da cloud
 	 * */
 	public Boolean download(HttpServletResponse response, String chave);
+	
+	/*
+	 * Deleta um blob salvo
+	 * */
+	public Boolean delete(String chave);
 }

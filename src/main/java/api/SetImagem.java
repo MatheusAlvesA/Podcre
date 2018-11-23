@@ -5,10 +5,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.appengine.api.NamespaceManager;
 
@@ -16,15 +16,15 @@ import Sistema.Sistema;
 import Sistema.SistemaInterface;
 
 @WebServlet(
-	    name = "SetImagemPerfil",
-	    urlPatterns = {"/api/setImagem"}
+	    name = "SetImagemDePerfil",
+	    urlPatterns = {"/api/setImagemPerfil"}
 	)
-public class SetImagemPerfil extends HttpServlet {
+public class SetImagem extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	SistemaInterface sistema;
 	
-	public SetImagemPerfil() {
+	public SetImagem() {
 		this.sistema = new Sistema();
 	}
 	
@@ -38,7 +38,7 @@ public class SetImagemPerfil extends HttpServlet {
 		    response.setCharacterEncoding("UTF-8");
 		    response.addHeader("Access-Control-Allow-Origin", "*");
 		    
-		    String url = sistema.getURLUploadImagem("/api/setImagem");
+		    String url = sistema.getURLUploadImagem("/api/setImagemPerfil");
 		    
 		    if(url != null) {
 		    	response.setStatus(HttpServletResponse.SC_OK);
@@ -74,20 +74,24 @@ public class SetImagemPerfil extends HttpServlet {
 		    response.setCharacterEncoding("UTF-8");
 		    response.addHeader("Access-Control-Allow-Origin", "*");
 
-	    	if(this.getCoockie(request, "nome") == null) {
+		    HttpSession s = request.getSession(false);
+		    String id = sistema.uploadImagem(request);
+		    
+	    	if(s == null) {
+	    		this.sistema.delete(id);
 		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		    	response.getWriter().write("{\"status\": \"erro\", "
-		    								+ "\"mensagem\": \"Nome não informado\"}");
+		    								+ "\"mensagem\": \"Usuário não logado\"}");
 		    	return;
 	    	}
-	    	
-	    	String id = sistema.uploadImagem(request);
+
 		    
-		    if(id != null && this.sistema.setImagem(this.getCoockie(request, "nome"), id)) {
+		    if(id != null && this.sistema.setImagem((String)s.getAttribute("nome"), id)) {
 		    	response.setStatus(HttpServletResponse.SC_OK);
 		    	response.getWriter().write("{\"status\": \"ok\"}");
 		    }
 		    else {
+		    	this.sistema.delete(id);
 		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		    	response.getWriter().write("{\"status\": \"erro\"}");
 		    }
@@ -100,18 +104,6 @@ public class SetImagemPerfil extends HttpServlet {
 			response.getWriter().print(sStackTrace);
 		}
 	    
-	}
-	
-	private String getCoockie(HttpServletRequest request, String nome) {
-		Cookie[] cookies = request.getCookies();
-
-		if (cookies != null)
-		 for (Cookie cookie : cookies)
-		   if (cookie.getName().equals(nome))
-		     return cookie.getValue();
-
-		
-		return null;
 	}
 	
 }

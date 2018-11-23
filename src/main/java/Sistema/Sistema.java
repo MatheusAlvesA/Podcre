@@ -187,6 +187,16 @@ public class Sistema implements SistemaInterface {
 		return true;
 	}
 	
-	private String encriptar(String original) {return org.apache.commons.codec.digest.DigestUtils.sha256Hex(original);}
+	@Override
+	public Boolean delete(String chave) {
+		try {
+			return this.bancoFiles.delete(chave);
+		}
+		catch (PersistenciaException e) {
+			return false;
+		}
+	}
+	
+	public String encriptar(String original) {return org.apache.commons.codec.digest.DigestUtils.sha256Hex(original);}
 
 }

@@ -94,6 +94,8 @@ try {
 	    	return;
 	    }
 	    
+	    user.remove("senha"); // A senha não pode ser enviada
+	    
 	    JSONObject corpoJSON = new JSONObject(user);
 	    
     	response.setStatus(HttpServletResponse.SC_OK);

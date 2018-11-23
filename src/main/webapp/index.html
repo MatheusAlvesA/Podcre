@@ -7,16 +7,16 @@
 <title>Teste upload</title>
 </head>
 <body>
-	<h1>Selecione o arquivo</h1>
+	<h1>Selecione o arquivo:</h1>
     <form id="formulario" action="" method="post" enctype="multipart/form-data">
         <input type="file" name="arquivo">
         <input type="submit" value="Submit">
     </form>
 </body>
 <script type="text/javascript">
-$.cookie('nome', 'jovemnerd');
+
 $.ajax({
-    url: "https://podcre-223200.appspot.com/api/setImagem",
+    url: "https://podcre-223420.appspot.com/api/setImagemPerfil",
     type: "GET",
     success: (r) => {
     	$("#formulario").attr('action', r.url);
