@@ -5,13 +5,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import com.google.appengine.api.NamespaceManager;
 
@@ -32,6 +29,41 @@ public class SetImagemPerfil extends HttpServlet {
 	}
 	
 	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) 
+	      throws IOException {
+		
+		  try {
+			  
+		    response.setContentType("application/json");
+		    response.setCharacterEncoding("UTF-8");
+		    response.addHeader("Access-Control-Allow-Origin", "*");
+		    
+		    String url = sistema.getURLUploadImagem("/api/setImagem");
+		    
+		    if(url != null) {
+		    	response.setStatus(HttpServletResponse.SC_OK);
+		    	response.getWriter().write(
+		    			 "{\"status\": \"ok\","
+		    			+ "\"url\": \""+ url +"\"}"
+		    			);
+		    }
+		    else {
+		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		    	response.getWriter().write("{\"status\": \"erro\"}");
+		    }
+		    
+		}
+		catch (Exception e) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			String sStackTrace = sw.toString(); // stack trace as a string
+			response.getWriter().print(sStackTrace);
+		}
+	    
+	}
+	
+	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	      throws IOException {
 		
@@ -41,26 +73,17 @@ public class SetImagemPerfil extends HttpServlet {
 		    response.setContentType("application/json");
 		    response.setCharacterEncoding("UTF-8");
 		    response.addHeader("Access-Control-Allow-Origin", "*");
-		    
-		    String corpo = IOUtils.toString(request.getReader());
-		    
-	    	JSONObject corpoJSON = null;
-	    	try {
-	    		corpoJSON = new JSONObject(corpo);
-	    	}
-	    	catch(JSONException e) {
+
+	    	if(this.getCoockie(request, "nome") == null) {
 		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		    	response.getWriter().write("{\"status\": \"erro\"}");
+		    	response.getWriter().write("{\"status\": \"erro\", "
+		    								+ "\"mensagem\": \"Nome não informado\"}");
 		    	return;
 	    	}
 	    	
-	    	if(!this.checarChaves(corpoJSON)) {
-		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		    	response.getWriter().write("{\"status\": \"erro\"}");
-		    	return;
-	    	}
+	    	String id = sistema.uploadImagem(request);
 		    
-		    if(this.sistema.setImagem(corpoJSON.getString("nome"), corpoJSON.getString("cod"))) {
+		    if(id != null && this.sistema.setImagem(this.getCoockie(request, "nome"), id)) {
 		    	response.setStatus(HttpServletResponse.SC_OK);
 		    	response.getWriter().write("{\"status\": \"ok\"}");
 		    }
@@ -79,11 +102,16 @@ public class SetImagemPerfil extends HttpServlet {
 	    
 	}
 	
-	private Boolean checarChaves(JSONObject o) {
-		if(o.isNull("nome")) return false;
-		if(o.isNull("cod")) return false;
+	private String getCoockie(HttpServletRequest request, String nome) {
+		Cookie[] cookies = request.getCookies();
+
+		if (cookies != null)
+		 for (Cookie cookie : cookies)
+		   if (cookie.getName().equals(nome))
+		     return cookie.getValue();
+
 		
-		return true;
+		return null;
 	}
 	
 }

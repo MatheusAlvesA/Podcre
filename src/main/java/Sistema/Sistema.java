@@ -147,9 +147,9 @@ public class Sistema implements SistemaInterface {
 	}
 
 	@Override
-	public String getURLUploadImagem() {
+	public String getURLUploadImagem(String uri) {
 		try {
-			return this.bancoFiles.gerarURL("/imagemUp");
+			return this.bancoFiles.gerarURL(uri);
 		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
 			return null;

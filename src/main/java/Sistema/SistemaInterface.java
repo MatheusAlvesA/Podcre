@@ -72,8 +72,10 @@ public interface SistemaInterface {
 	/*
 	 * Retorna uma url para onde o upload de um arquivo deve ser direcionado
 	 * retorna null em caso de problema
+	 * 
+	 * uri,  a uri onde será feio o upload
 	 * */
-	public String getURLUploadImagem();
+	public String getURLUploadImagem(String uri);
 	
 	/*
 	 * Esta função guarda na cloud um podcast upado na requisição

@@ -1,20 +1,28 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-  <head>
-    <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
-    <title>Hello App Engine</title>
-  </head>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="jquery.cookie.js"></script>
+<title>Teste upload</title>
+</head>
+<body>
+	<h1>Selecione o arquivo</h1>
+    <form id="formulario" action="" method="post" enctype="multipart/form-data">
+        <input type="file" name="arquivo">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+<script type="text/javascript">
+$.cookie('nome', 'jovemnerd');
+$.ajax({
+    url: "https://podcre-223200.appspot.com/api/setImagem",
+    type: "GET",
+    success: (r) => {
+    	$("#formulario").attr('action', r.url);
+    },
+    error: () => {alert("Falha");}
+ });
 
-  <body>
-    <h1>Hello App Engine!</h1>
-  
-    <table>
-      <tr>
-        <td colspan="2" style="font-weight:bold;">Available Servlets:</td>        
-      </tr>
-      <tr>
-        <td><a href='/hello'>The servlet</a></td>
-      </tr>
-    </table>
-  </body>
+</script>
 </html>
