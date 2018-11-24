@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="jquery.cookie.js"></script>
+<title>Teste upload</title>
+</head>
+<body>
+	<h1>Selecione o arquivo:</h1>
+    <form id="formulario" method="post" enctype="multipart/form-data">
+        <input id="nome" type="text" name="nome"><br>
+        <input id="senha" type="password" name="senha"><br>
+    </form>
+    <button onclick="submeter()" >[LOGAR]</button>
+</body>
+<script type="text/javascript">
+
+function submeter(e) {
+	$.ajax({
+	    url: "/api/Login",
+	    type: "POST",
+	    data: JSON.stringify({
+	    	nome: $("#nome").val(),
+	    	senha: $("#senha").val(),
+	    }),
+	    contentType: 'application/json; charset=utf-8',
+	    success: (r) => {alert("Sucesso");},
+	    error: () => {alert("Falha");}
+	 });
+}
+
+</script>
+</html>

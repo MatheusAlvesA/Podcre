@@ -39,9 +39,9 @@ public class CadastrarUser extends HttpServlet {
 		NamespaceManager.set("Podcre");
 		
 		  try {
-		    response.setContentType("application/json");
-		    response.setCharacterEncoding("UTF-8");
-		    response.addHeader("Access-Control-Allow-Origin", "*");
+			response.addHeader("Access-Control-Allow-Origin", "*");
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
 		    
 		    String corpo = IOUtils.toString(request.getReader());
 		    
@@ -82,9 +82,9 @@ public class CadastrarUser extends HttpServlet {
 		  NamespaceManager.set("Podcre");
 		  
 try {
-	    response.setContentType("application/json");
-	    response.setCharacterEncoding("UTF-8");
-	    response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
 
 	    Map<String, String> user = sistema.getUser(request.getParameter("nome"));
 	    

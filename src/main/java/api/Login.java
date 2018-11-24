@@ -33,12 +33,12 @@ public class Login extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	      throws IOException {
-		
+				response.addHeader("Access-Control-Allow-Origin", "*");
 		  try {
+			  	
 			    response.setContentType("application/json");
 			    response.setCharacterEncoding("UTF-8");
-			    response.addHeader("Access-Control-Allow-Origin", "*");
-			    
+
 			    String corpo = IOUtils.toString(request.getReader());
 			    
 		    	JSONObject corpoJSON = null;
@@ -58,7 +58,7 @@ public class Login extends HttpServlet {
 			    if( user != null && user.get("senha").equals( this.sistema.encriptar(corpoJSON.getString("senha")) ) ) {
 			    	
 			    	HttpSession s = request.getSession(true);
-			    	s.setAttribute("nome", user.get("senha"));
+			    	s.setAttribute("nome", user.get("nome_user"));
 			    	
 			    	response.setStatus(HttpServletResponse.SC_OK);
 			    	response.getWriter().write("{\"status\": \"ok\"}");
@@ -81,11 +81,11 @@ public class Login extends HttpServlet {
 	@Override
 	public void doDelete(HttpServletRequest request, HttpServletResponse response) 
 	      throws IOException {
-		
+			response.addHeader("Access-Control-Allow-Origin", "*");
 		  try {
+			  	
 			    response.setContentType("application/json");
 			    response.setCharacterEncoding("UTF-8");
-			    response.addHeader("Access-Control-Allow-Origin", "*");
 		    	
 		    	HttpSession s = request.getSession(false);
 			    

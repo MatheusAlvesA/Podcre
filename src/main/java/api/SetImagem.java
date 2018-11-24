@@ -33,10 +33,9 @@ public class SetImagem extends HttpServlet {
 	      throws IOException {
 		
 		  try {
-			  
-		    response.setContentType("application/json");
-		    response.setCharacterEncoding("UTF-8");
-		    response.addHeader("Access-Control-Allow-Origin", "*");
+			response.addHeader("Access-Control-Allow-Origin", "*");
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
 		    
 		    String url = sistema.getURLUploadImagem("/api/setImagemPerfil");
 		    
@@ -70,9 +69,9 @@ public class SetImagem extends HttpServlet {
 		NamespaceManager.set("Podcre");
 		
 		  try {
-		    response.setContentType("application/json");
-		    response.setCharacterEncoding("UTF-8");
-		    response.addHeader("Access-Control-Allow-Origin", "*");
+			response.addHeader("Access-Control-Allow-Origin", "*");
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
 
 		    HttpSession s = request.getSession(false);
 		    String id = sistema.uploadImagem(request);
@@ -88,12 +87,17 @@ public class SetImagem extends HttpServlet {
 		    
 		    if(id != null && this.sistema.setImagem((String)s.getAttribute("nome"), id)) {
 		    	response.setStatus(HttpServletResponse.SC_OK);
-		    	response.getWriter().write("{\"status\": \"ok\"}");
+		    	response.sendRedirect("/");
 		    }
 		    else {
 		    	this.sistema.delete(id);
 		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		    	response.getWriter().write("{\"status\": \"erro\"}");
+		    	if(id == null)
+			    	response.getWriter().write("{\"status\": \"erro\", "
+							+ "\"mensagem\": \"Não foi possível obter o id do blob\"}");
+		    	else
+			    	response.getWriter().write("{\"status\": \"erro\", "
+							+ "\"mensagem\": \""+(String)s.getAttribute("nome")+"|"+id+"\"}");
 		    }
 		}
 		catch (Exception e) {

@@ -37,9 +37,9 @@ public class EstatisticaListaNomes extends HttpServlet {
 		NamespaceManager.set("Podcre");
 		  
 		try {
-		    response.setContentType("application/json");
-		    response.setCharacterEncoding("UTF-8");
-		    response.addHeader("Access-Control-Allow-Origin", "*");
+			response.addHeader("Access-Control-Allow-Origin", "*");
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
 	
 		    Vector<String> lista = sistema.listarNomes();
 		    
