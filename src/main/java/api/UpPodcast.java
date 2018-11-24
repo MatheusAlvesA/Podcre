@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,15 +15,15 @@ import Sistema.Sistema;
 import Sistema.SistemaInterface;
 
 @WebServlet(
-	    name = "SetImagemDePerfil",
-	    urlPatterns = {"/api/setImagemPerfil"}
+	    name = "UploadPodcast",
+	    urlPatterns = {"/api/upPodcast"}
 	)
-public class SetImagem extends HttpServlet {
+public class UpPodcast extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	SistemaInterface sistema;
 	
-	public SetImagem() {
+	public UpPodcast() {
 		this.sistema = new Sistema();
 	}
 	
@@ -35,7 +36,7 @@ public class SetImagem extends HttpServlet {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 		    
-		    String url = sistema.getURLUploadImagem("/api/setImagemPerfil");
+		    String url = sistema.getURLUploadPodcast("/api/upPodcast");
 		    
 		    if(url != null) {
 		    	response.setStatus(HttpServletResponse.SC_OK);
@@ -80,8 +81,20 @@ public class SetImagem extends HttpServlet {
 		    	return;
 	    	}
 
-		    
-		    if(id != null && this.sistema.setImagem((String)s.getAttribute("nome"), id)) {
+		    if(this.getFromCookie(request.getCookies(), "nome") == null || this.getFromCookie(request.getCookies(), "assunto") == null) {
+		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		    	response.getWriter().write("{\"status\": \"erro\", "
+		    								+ "\"mensagem\": \"Os cookies não estão corretos\"}");
+		    }
+	    	
+		    if(id != null &&
+		    		this.sistema.insertPodcast(
+		    				(String)s.getAttribute("nome"),
+		    				this.getFromCookie(request.getCookies(), "nome"),
+		    				id,
+		    				this.getFromCookie(request.getCookies(), "assunto")
+		    		))
+		    {
 		    	response.setStatus(HttpServletResponse.SC_OK);
 		    	response.sendRedirect("/");
 		    }
@@ -106,4 +119,12 @@ public class SetImagem extends HttpServlet {
 	    
 	}
 	
+	private String getFromCookie(Cookie[] cookies, String nome) {
+		if (cookies != null)
+		 for (Cookie cookie : cookies)
+		   if (cookie.getName().equals(nome))
+			   return cookie.getValue();
+
+		return null;
+	}
 }

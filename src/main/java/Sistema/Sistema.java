@@ -40,6 +40,10 @@ public class Sistema implements SistemaInterface {
 	@Override
 	public Boolean setImagem(String nome_user, String blob) {
 		try {
+			Map<String, String> user = this.banco.getUser(nome_user);
+			if(!user.get("imagem_blob").equals(""))
+				this.delete(user.get("imagem_blob"));
+			
 			this.banco.setImagem(nome_user, blob);
 		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
@@ -137,9 +141,9 @@ public class Sistema implements SistemaInterface {
 	}
 
 	@Override
-	public String getURLUploadPodcast() {
+	public String getURLUploadPodcast(String uri) {
 		try {
-			return this.bancoFiles.gerarURL("/podcastUp");
+			return this.bancoFiles.gerarURL(uri);
 		} catch (PersistenciaException e) {
 			// TODO Auto-generated catch block
 			return null;

@@ -67,7 +67,7 @@ public interface SistemaInterface {
 	 * Retorna uma url para onde o upload de um arquivo deve ser direcionado
 	 * retorna null em caso de problema
 	 * */
-	public String getURLUploadPodcast();
+	public String getURLUploadPodcast(String uri);
 	
 	/*
 	 * Retorna uma url para onde o upload de um arquivo deve ser direcionado
