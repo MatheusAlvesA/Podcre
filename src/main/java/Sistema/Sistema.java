@@ -12,6 +12,7 @@ import Persistencia.BancoFilesInterface;
 import Persistencia.BancoInterface;
 import Persistencia.Cache;
 import Persistencia.CacheInterface;
+import Persistencia.Logger;
 import Persistencia.PersistenciaException;
 
 public class Sistema implements SistemaInterface {
@@ -19,11 +20,13 @@ public class Sistema implements SistemaInterface {
 	private BancoInterface banco;
 	private CacheInterface cache;
 	private BancoFilesInterface bancoFiles;
+	private Logger logger;
 	
 	public Sistema() {
 		this.banco = new Banco();
 		this.cache = new Cache();
 		this.bancoFiles = new BancoFiles();
+		this.logger = new Logger();
 	}
 	
 	@Override
@@ -31,7 +34,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			this.banco.insertUser(nome_user, nome_display, email, this.encriptar(senha), "");
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
+			this.logger.logar(e);
 			return false;
 		}
 		return true;
@@ -46,7 +49,7 @@ public class Sistema implements SistemaInterface {
 			
 			this.banco.setImagem(nome_user, blob);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
+			this.logger.logar(e);
 			return false;
 		}
 		return true;
@@ -60,7 +63,8 @@ public class Sistema implements SistemaInterface {
 			retorno = this.banco.getPodcast(nome_user);
 		}
 		catch (PersistenciaException e) {
-			// TODO: handle exception
+			this.logger.logar(e);
+			return null;
 		}
 		
 		return retorno;
@@ -74,7 +78,8 @@ public class Sistema implements SistemaInterface {
 			retorno = this.banco.getUser(nome_user);
 		}
 		catch (PersistenciaException e) {
-			// TODO: handle exception
+			this.logger.logar(e);
+			return null;
 		}
 		
 		return retorno;
@@ -83,6 +88,7 @@ public class Sistema implements SistemaInterface {
 	@Override
 	public Vector<String> listarNomes() {
 		try {
+			@SuppressWarnings("unchecked")
 			Vector<String> r = (Vector<String>) this.cache.get("listaUsers");
 			if(r == null)
 				return this.banco.listarNomes();
@@ -98,8 +104,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			this.banco.like(id);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logger.logar(e);
 			return false;
 		}
 		return true;
@@ -110,8 +115,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			this.banco.disLike(id);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logger.logar(e);
 			return false;
 		}
 		return true;
@@ -122,8 +126,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			this.banco.listened(id);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.logger.logar(e);
 			return false;
 		}
 		return true;
@@ -134,7 +137,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			this.banco.insertPodcast(nome_user, nome, 0, 0, 0, key_blob, assunto);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
+			this.logger.logar(e);
 			return false;
 		}
 		return true;
@@ -145,7 +148,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			return this.bancoFiles.gerarURL(uri);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
+			this.logger.logar(e);
 			return null;
 		}
 	}
@@ -155,7 +158,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			return this.bancoFiles.gerarURL(uri);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
+			this.logger.logar(e);
 			return null;
 		}
 	}
@@ -165,7 +168,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			return this.bancoFiles.receberArquivo(request);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
+			this.logger.logar(e);
 			return null;
 		}
 	}
@@ -175,7 +178,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			return this.bancoFiles.receberArquivo(request);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
+			this.logger.logar(e);
 			return null;
 		}
 	}
@@ -185,7 +188,7 @@ public class Sistema implements SistemaInterface {
 		try {
 			this.bancoFiles.enviarArquivo(response, chave);
 		} catch (PersistenciaException e) {
-			// TODO Auto-generated catch block
+			this.logger.logar(e);
 			return false;
 		}
 		return true;
@@ -197,9 +200,13 @@ public class Sistema implements SistemaInterface {
 			return this.bancoFiles.delete(chave);
 		}
 		catch (PersistenciaException e) {
+			this.logger.logar(e);
 			return false;
 		}
 	}
+	
+	@Override
+	public Boolean logarErro(Exception e) {return this.logger.logar(e);}
 	
 	public String encriptar(String original) {return org.apache.commons.codec.digest.DigestUtils.sha256Hex(original);}
 

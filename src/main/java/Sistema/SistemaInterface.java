@@ -96,4 +96,9 @@ public interface SistemaInterface {
 	 * Deleta um blob salvo
 	 * */
 	public Boolean delete(String chave);
+	
+	/*
+	 * Loga no banco um erro ocorrido
+	 * */
+	public Boolean logarErro(Exception e);
 }

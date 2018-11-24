@@ -1,8 +1,6 @@
 package api;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -60,11 +58,9 @@ public class Contagem extends HttpServlet {
 		    
 		}
 		catch (Exception e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			String sStackTrace = sw.toString(); // stack trace as a string
-			response.getWriter().print(sStackTrace);
+			this.sistema.logarErro(e);
+	    	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    	response.getWriter().write("{\"status\": \"erro\"}");
 		}
 	    
 	}
