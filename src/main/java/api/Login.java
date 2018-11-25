@@ -27,6 +27,28 @@ public class Login extends HttpServlet {
 	public Login() {
 		this.sistema = new Sistema();
 	}
+
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) 
+	      throws IOException {
+
+			response.addHeader("Access-Control-Allow-Origin", "*");
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+		    
+		    HttpSession s = request.getSession(false);
+	    	if(s == null) {
+		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		    	response.getWriter().write("{\"status\": \"erro\", "
+		    								+ "\"mensagem\": \"Usuário não logado\"}");
+	    	}
+	    	else {
+		    	response.setStatus(HttpServletResponse.SC_OK);
+		    	response.getWriter().write("{\"status\": \"ok\", "
+		    								+ "\"nome\": \""+s.getAttribute("nome")+"\"}");
+	    	}
+
+	}
 	
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
