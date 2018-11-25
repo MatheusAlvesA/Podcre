@@ -31,8 +31,6 @@ public class Login extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 	      throws IOException {
-
-			response.addHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 		    
@@ -53,9 +51,7 @@ public class Login extends HttpServlet {
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) 
 	      throws IOException {
-				response.addHeader("Access-Control-Allow-Origin", "*");
 		  try {
-			  	
 			    response.setContentType("application/json");
 			    response.setCharacterEncoding("UTF-8");
 
@@ -99,9 +95,7 @@ public class Login extends HttpServlet {
 	@Override
 	public void doDelete(HttpServletRequest request, HttpServletResponse response) 
 	      throws IOException {
-			response.addHeader("Access-Control-Allow-Origin", "*");
 		  try {
-			  	
 			    response.setContentType("application/json");
 			    response.setCharacterEncoding("UTF-8");
 		    	
@@ -113,8 +107,8 @@ public class Login extends HttpServlet {
 			    	response.getWriter().write("{\"status\": \"ok\"}");
 			    }
 			    else {
-			    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			    	response.getWriter().write("{\"status\": \"erro\"}");
+			    	response.setStatus(HttpServletResponse.SC_OK);
+			    	response.getWriter().write("{\"status\": \"ok\", \"mensagem\": \"Não estava logado\"}");
 			    }
 			}
 			catch (Exception e) {

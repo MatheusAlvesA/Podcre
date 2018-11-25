@@ -28,7 +28,6 @@ public class Contagem extends HttpServlet {
 	      throws IOException {
 		
 		  try {
-			response.addHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 		    

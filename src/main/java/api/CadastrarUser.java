@@ -33,7 +33,6 @@ public class CadastrarUser extends HttpServlet {
 	      throws IOException {
 		
 		  try {
-			response.addHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 		    
@@ -72,7 +71,6 @@ public class CadastrarUser extends HttpServlet {
 	      throws IOException {
 		  
 		try {
-			response.addHeader("Access-Control-Allow-Origin", "*");
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 	
