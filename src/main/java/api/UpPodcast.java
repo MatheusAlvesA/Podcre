@@ -65,7 +65,7 @@ public class UpPodcast extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 
 		    HttpSession s = request.getSession(false);
-		    String id = sistema.uploadImagem(request);
+		    String id = sistema.uploadPodcast(request);
 		    
 	    	if(s == null) {
 	    		this.sistema.delete(id);
@@ -79,6 +79,7 @@ public class UpPodcast extends HttpServlet {
 		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		    	response.getWriter().write("{\"status\": \"erro\", "
 		    								+ "\"mensagem\": \"Os cookies não estão corretos\"}");
+		    	return;
 		    }
 	    	
 		    if(id != null &&
