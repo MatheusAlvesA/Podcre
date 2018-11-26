@@ -101,6 +101,7 @@ public class Sistema implements SistemaInterface {
 
 	@Override
 	public Boolean computarLike(String id) {
+		if(id == null) return false;
 		try {
 			this.banco.like(id);
 		} catch (PersistenciaException e) {
@@ -112,6 +113,7 @@ public class Sistema implements SistemaInterface {
 
 	@Override
 	public Boolean computarDisLike(String id) {
+		if(id == null) return false;
 		try {
 			this.banco.disLike(id);
 		} catch (PersistenciaException e) {
@@ -123,6 +125,7 @@ public class Sistema implements SistemaInterface {
 
 	@Override
 	public Boolean computarListened(String id) {
+		if(id == null) return false;
 		try {
 			this.banco.listened(id);
 		} catch (PersistenciaException e) {

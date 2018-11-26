@@ -32,6 +32,13 @@ public class Contagem extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 		    
 			Boolean r = false;
+			
+		    if(request.getParameter("qual") == null) {
+		    	response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		    	response.getWriter().write("{\"status\": \"erro\"}");
+		    	return;
+		    }
+		    
 			switch (request.getParameter("qual")) {
 				case "like":
 					r = sistema.computarLike(request.getParameter("cod"));
@@ -59,7 +66,7 @@ public class Contagem extends HttpServlet {
 		catch (Exception e) {
 			this.sistema.logarErro(e);
 	    	response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	    	response.getWriter().write("{\"status\": \"erro\"}");
+	    	response.getWriter().write("{\"status\": \"erro\", \"mensagem\": \"" + e.getMessage() + "\"}");
 		}
 	    
 	}
