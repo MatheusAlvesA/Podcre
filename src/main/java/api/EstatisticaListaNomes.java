@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 
-import com.google.appengine.api.NamespaceManager;
+//import com.google.appengine.api.NamespaceManager;
 
 import Sistema.Sistema;
 import Sistema.SistemaInterface;
@@ -31,9 +31,7 @@ public class EstatisticaListaNomes extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 	      throws IOException {
-		  
-		NamespaceManager.set("Podcre");
-		  
+		
 		try {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
