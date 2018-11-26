@@ -164,7 +164,7 @@ public class Banco implements BancoInterface {
 	}
 
 	@Override
-	public Vector< Map<String, Object> > getPodcast(String nome_user) throws PersistenciaException {
+	public Vector< Map<String, String> > getPodcast(String nome_user) throws PersistenciaException {
 		NamespaceManager.set("Podcre");
 		
 		QueryResults<Entity> podcast = null;
@@ -182,17 +182,17 @@ public class Banco implements BancoInterface {
 			throw Nova;
 		}
 		
-		Vector< Map<String, Object> > retorno = new Vector< Map<String, Object> >();
+		Vector< Map<String, String> > retorno = new Vector< Map<String, String> >();
 		while(podcast.hasNext()) {
 			Entity e = podcast.next();
-			Map<String, Object> novo = new HashMap<String, Object>();
+			Map<String, String> novo = new HashMap<String, String>();
 			
-			novo.put("chave", e.getKey().getId());
+			novo.put("chave", e.getKey().getId().toString());
 			novo.put("nome_user", e.getString("nome_user"));
-			novo.put("n_listeners",  (int) e.getLong("n_listeners") );
-			novo.put("n_likes",  (int) e.getLong("n_likes") );
-			novo.put("n_dislikes", (int) e.getLong("n_dislikes") );
-			novo.put("key_blob", e.getString("url"));
+			novo.put("n_listeners",  String.valueOf(e.getLong("n_listeners")) );
+			novo.put("n_likes",  String.valueOf(e.getLong("n_likes")) );
+			novo.put("n_dislikes", String.valueOf(e.getLong("n_dislikes")) );
+			novo.put("key_blob", e.getString("key_blob"));
 			novo.put("nome", e.getString("nome"));
 			novo.put("assunto", e.getString("assunto"));
 			

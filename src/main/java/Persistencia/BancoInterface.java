@@ -60,7 +60,7 @@ public interface BancoInterface {
 	 * 
 	 * nome_user, o nome do usuário do qual se quer obter os audios
 	 * */
-	public Vector< Map<String, Object> > getPodcast(String nome_user) throws PersistenciaException;
+	public Vector< Map<String, String> > getPodcast(String nome_user) throws PersistenciaException;
 	
 	/*
 	 * Esta função adiciona um like ao podcast cujo id foi passado

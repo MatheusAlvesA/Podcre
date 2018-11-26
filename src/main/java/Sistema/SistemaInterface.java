@@ -33,7 +33,7 @@ public interface SistemaInterface {
 	 * 
 	 * nome_user, o nome do usuário do qual se quer obter os audios
 	 * */
-	public Vector< Map<String, Object> > getPodcasts(String nome_user);
+	public Vector< Map<String, String> > getPodcasts(String nome_user);
 	
 	/*
 	 * Retorna um usuário dado seu nome de usuário único

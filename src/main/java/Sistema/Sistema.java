@@ -56,8 +56,8 @@ public class Sistema implements SistemaInterface {
 	}
 
 	@Override
-	public Vector<Map<String, Object>> getPodcasts(String nome_user) {
-		Vector<Map<String, Object>> retorno = new Vector<Map<String, Object>>();
+	public Vector<Map<String, String>> getPodcasts(String nome_user) {
+		Vector<Map<String, String>> retorno = new Vector<Map<String, String>>();
 		
 		try {
 			retorno = this.banco.getPodcast(nome_user);
