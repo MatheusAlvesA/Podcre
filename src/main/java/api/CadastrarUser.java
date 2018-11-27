@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -49,6 +50,10 @@ public class CadastrarUser extends HttpServlet {
 	    	}
 		    
 		    if(this.sistema.inserirUsuario(corpoJSON.getString("nome"), corpoJSON.getString("display"), corpoJSON.getString("email"), corpoJSON.getString("senha"))) {
+		    	
+		    	HttpSession s = request.getSession(true);
+		    	s.setAttribute("nome", corpoJSON.getString("nome"));
+		    	
 		    	response.setStatus(HttpServletResponse.SC_CREATED);
 		    	response.getWriter().write("{\"status\": \"ok\"}");
 		    }
