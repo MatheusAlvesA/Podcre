@@ -101,4 +101,9 @@ public interface SistemaInterface {
 	 * Loga no banco um erro ocorrido
 	 * */
 	public Boolean logarErro(Exception e);
+	
+	/*
+	 * Guarda em cache informações provindas de grandes requisições ao banco
+	 * */
+	public Boolean atualizarCache();
 }

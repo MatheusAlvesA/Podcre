@@ -21,6 +21,7 @@ public class Sistema implements SistemaInterface {
 	private CacheInterface cache;
 	private BancoFilesInterface bancoFiles;
 	private Logger logger;
+	private static int MAX_PODCASTS_CACHE = 10; // O número máximo de usuários cujos podcasts serão colocados em cache
 	
 	public Sistema() {
 		this.banco = new Banco();
@@ -57,17 +58,24 @@ public class Sistema implements SistemaInterface {
 
 	@Override
 	public Vector<Map<String, String>> getPodcasts(String nome_user) {
-		Vector<Map<String, String>> retorno = new Vector<Map<String, String>>();
-		
 		try {
-			retorno = this.banco.getPodcast(nome_user);
+			
+			@SuppressWarnings("unchecked")
+			Vector<Map<String, String>> r = (Vector<Map<String, String>>) this.cache.get("podcasts_"+nome_user);
+			if(r == null)
+				return this.banco.getPodcast(nome_user);
+			else
+				return r;
+			
+		} catch (PersistenciaException e) {
+			try {
+				return this.banco.getPodcast(nome_user);
+			}
+			catch (PersistenciaException e2) {
+				this.logger.logar(e2);
+				return null;
+			}
 		}
-		catch (PersistenciaException e) {
-			this.logger.logar(e);
-			return null;
-		}
-		
-		return retorno;
 	}
 
 	@Override
@@ -204,6 +212,26 @@ public class Sistema implements SistemaInterface {
 		}
 		catch (PersistenciaException e) {
 			this.logger.logar(e);
+			return false;
+		}
+	}
+	
+	@Override
+	public Boolean atualizarCache() {
+		try {
+			this.cache.flush();
+			
+			Vector<String> lnomes = this.banco.listarNomes();
+			this.cache.set("listaUsers", lnomes, 60*6);
+			
+			for(int loop = 0; loop < lnomes.size() && loop < Sistema.MAX_PODCASTS_CACHE; loop++) {
+				Vector<Map<String, String>> podcasts = this.banco.getPodcast(lnomes.get(loop));
+				this.cache.set("podcasts_"+lnomes.get(loop), podcasts, 60*6);
+			}
+			
+			return true;
+		}
+		catch (PersistenciaException e) {
 			return false;
 		}
 	}
