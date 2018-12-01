@@ -108,6 +108,15 @@ public class Sistema implements SistemaInterface {
 	}
 
 	@Override
+	public Vector<String> listarLocs(String nome) {
+		try {
+			return this.banco.listarLocs(nome);
+		} catch (PersistenciaException e) {
+			return null;
+		}
+	}
+	
+	@Override
 	public Boolean computarLike(String id) {
 		if(id == null) return false;
 		try {
@@ -154,6 +163,17 @@ public class Sistema implements SistemaInterface {
 		return true;
 	}
 
+	@Override
+	public Boolean insertGeoloc(String nome_user, String latitude, String longitude) {
+		try {
+			this.banco.insertGeoloc(nome_user, latitude, longitude);
+		} catch (PersistenciaException e) {
+			this.logger.logar(e);
+			return false;
+		}
+		return true;
+	}
+	
 	@Override
 	public String getURLUploadPodcast(String uri) {
 		try {

@@ -305,6 +305,56 @@ public class Banco implements BancoInterface {
 		
 	}
 	
+	@Override
+	public void insertGeoloc(String nome_user, String latitude, String longitude)
+			throws PersistenciaException {
+		NamespaceManager.set("Podcre");
+		
+		try {
+			
+			Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+			KeyFactory keyFactory = datastore.newKeyFactory();
+			keyFactory.setKind("Geolocalization");
+			Builder<IncompleteKey> entityBuilder = Entity.newBuilder(keyFactory.newKey());
+
+			entityBuilder.set("user", nome_user);
+			entityBuilder.set("latitude", latitude);
+			entityBuilder.set("longitude", longitude);
+			
+			FullEntity<IncompleteKey> entity = entityBuilder.build();
+			datastore.put(entity);
+			
+		}
+		catch (Exception e) {
+			PersistenciaException Nova = new PersistenciaException(e);
+			Nova.setCodError(TipoErro.FALHA_AO_ACESSAR);
+			throw Nova;
+		}
+
+	}
+	
+	@Override
+	public Vector<String> listarLocs(String nome_user) throws PersistenciaException {
+		NamespaceManager.set("Podcre");
+		
+		Vector<String> retorno = new Vector<String>();
+		
+		Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+		EntityQuery query = Query.newEntityQueryBuilder()
+			    .setKind("Geolocalization")
+			    .setFilter( PropertyFilter.eq("user", nome_user) )
+			    .build();
+		QueryResults<Entity> lista = datastore.run(query);
+		
+		while(lista.hasNext()) {
+			Entity temp = lista.next();
+			retorno.add(temp.getString("latitude")+", "+temp.getString("longitude"));
+		}
+		
+		return retorno;
+	}
+	
+	@Override
 	public Vector<String> listarNomes() {
 		NamespaceManager.set("Podcre");
 		

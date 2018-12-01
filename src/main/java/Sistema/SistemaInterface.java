@@ -64,6 +64,12 @@ public interface SistemaInterface {
 	public Boolean insertPodcast(String nome_user, String nome, String key_blob, String assunto);
 	
 	/*
+	 * Insere uma geolocalização de um ouvinte de um podcaster
+	 * 
+	 * */
+	public Boolean insertGeoloc(String nome_user, String latitude, String longitude);
+	
+	/*
 	 * Retorna uma url para onde o upload de um arquivo deve ser direcionado
 	 * retorna null em caso de problema
 	 * */
@@ -101,6 +107,11 @@ public interface SistemaInterface {
 	 * Loga no banco um erro ocorrido
 	 * */
 	public Boolean logarErro(Exception e);
+	
+	/*
+	 * Lista as geolocalizações dos ouvintes deste podcaster
+	 * */
+	public Vector<String> listarLocs(String nome);
 	
 	/*
 	 * Guarda em cache informações provindas de grandes requisições ao banco

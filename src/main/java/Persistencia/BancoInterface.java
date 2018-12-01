@@ -98,4 +98,18 @@ public interface BancoInterface {
 	 * Retorna uma lista de todos os nomes de usuários
 	 * */
 	public Vector<String> listarNomes();
+	
+	/*
+	 * Retorna uma lista de geolocalizações de ouvintes de um podcaster
+	 * */
+	public Vector<String> listarLocs(String nome_user) throws PersistenciaException;
+	
+	/*
+	 * Esta função insere uma geolocalização de um usuário que escutou um episódio de podcast de um podcaster
+	 * 
+	 * nome_user - O nome do podcaster quer teve um podcast ouvido
+	 * latitude - A latitude do ouvinte
+	 * longitude - A longitude do ouvinte
+	 * */
+	public void insertGeoloc(String nome_user, String latitude, String longitude) throws PersistenciaException;
 }
