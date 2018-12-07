@@ -203,6 +203,44 @@ public class Banco implements BancoInterface {
 	}
 	
 	@Override
+	public Vector< Map<String, String> > getPodcast() throws PersistenciaException {
+		NamespaceManager.set("Podcre");
+		
+		QueryResults<Entity> podcast = null;
+		try {
+			Datastore datastore = DatastoreOptions.getDefaultInstance().getService();
+			EntityQuery query = Query.newEntityQueryBuilder()
+				    .setKind("Podcast")
+				    .build();
+			podcast = datastore.run(query);
+		}
+		catch (Exception e) {
+			PersistenciaException Nova = new PersistenciaException(e);
+			Nova.setCodError(TipoErro.FALHA_AO_ACESSAR);
+			throw Nova;
+		}
+		
+		Vector< Map<String, String> > retorno = new Vector< Map<String, String> >();
+		while(podcast.hasNext()) {
+			Entity e = podcast.next();
+			Map<String, String> novo = new HashMap<String, String>();
+			
+			novo.put("chave", e.getKey().getId().toString());
+			novo.put("nome_user", e.getString("nome_user"));
+			novo.put("n_listeners",  String.valueOf(e.getLong("n_listeners")) );
+			novo.put("n_likes",  String.valueOf(e.getLong("n_likes")) );
+			novo.put("n_dislikes", String.valueOf(e.getLong("n_dislikes")) );
+			novo.put("key_blob", e.getString("key_blob"));
+			novo.put("nome", e.getString("nome"));
+			novo.put("assunto", e.getString("assunto"));
+			
+			retorno.add(novo);
+		}
+		
+		return retorno;
+	}
+	
+	@Override
 	public void like(String id) throws PersistenciaException {
 		NamespaceManager.set("Podcre");
 		

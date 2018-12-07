@@ -63,6 +63,13 @@ public interface BancoInterface {
 	public Vector< Map<String, String> > getPodcast(String nome_user) throws PersistenciaException;
 	
 	/*
+	 * Retorna um vetor com todos os audios upados por todos os usuários
+	 * 
+	 * pode lançar PersistenciaException em caso de falha no banco
+	 * */
+	public Vector< Map<String, String> > getPodcast() throws PersistenciaException;
+	
+	/*
 	 * Esta função adiciona um like ao podcast cujo id foi passado
 	 * 
 	 * Pode lançar PersistenciaException em caso de não encontrar o podcast

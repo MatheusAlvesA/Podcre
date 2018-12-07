@@ -60,6 +60,15 @@ public class Sistema implements SistemaInterface {
 	public Vector<Map<String, String>> getPodcasts(String nome_user) {
 		try {
 			
+			if(nome_user == null || nome_user == "") {
+				@SuppressWarnings("unchecked")
+				Vector<Map<String, String>> r = (Vector<Map<String, String>>) this.cache.get("podcasts");
+				if(r == null)
+					return this.banco.getPodcast();
+				else
+					return r;
+			}
+			
 			@SuppressWarnings("unchecked")
 			Vector<Map<String, String>> r = (Vector<Map<String, String>>) this.cache.get("podcasts_"+nome_user);
 			if(r == null)
@@ -243,6 +252,9 @@ public class Sistema implements SistemaInterface {
 			
 			Vector<String> lnomes = this.banco.listarNomes();
 			this.cache.set("listaUsers", lnomes, 60*6);
+			
+			Vector<Map<String, String>> allPodcasts = this.banco.getPodcast();
+			this.cache.set("podcasts", allPodcasts, 60*6);
 			
 			for(int loop = 0; loop < lnomes.size() && loop < Sistema.MAX_PODCASTS_CACHE; loop++) {
 				Vector<Map<String, String>> podcasts = this.banco.getPodcast(lnomes.get(loop));
