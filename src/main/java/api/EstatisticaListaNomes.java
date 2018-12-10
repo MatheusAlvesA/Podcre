@@ -36,6 +36,12 @@ public class EstatisticaListaNomes extends HttpServlet {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 	
+			if(!Autenticador.autenticar(request, "List users")) {
+		    	response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		    	response.getWriter().write("{\"status\": \"erro\", \"mensagem\": \"Acesso Negado\"}");
+		    	return;
+			}
+			
 		    Vector<String> lista = sistema.listarNomes();
 		    
 		    if(lista == null || lista.isEmpty()) {

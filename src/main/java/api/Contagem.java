@@ -30,7 +30,13 @@ public class Contagem extends HttpServlet {
 		  try {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
-		    
+			
+			if(!Autenticador.autenticar(request, "Cantabilize like/dislike")) {
+		    	response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		    	response.getWriter().write("{\"status\": \"erro\", \"mensagem\": \"Acesso Negado\"}");
+		    	return;
+			}
+			
 			Boolean r = false;
 			
 		    if(request.getParameter("qual") == null) {

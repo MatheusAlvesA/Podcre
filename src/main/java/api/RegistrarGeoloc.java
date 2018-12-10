@@ -89,6 +89,12 @@ public class RegistrarGeoloc extends HttpServlet {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 	
+			if(!Autenticador.autenticar(request, "List geolocs")) {
+		    	response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		    	response.getWriter().write("{\"status\": \"erro\", \"mensagem\": \"Acesso Negado\"}");
+		    	return;
+			}
+			
 		    Vector<String> lista = sistema.listarLocs(request.getParameter("nome"));
 		    
 		    if(lista == null || lista.isEmpty()) {

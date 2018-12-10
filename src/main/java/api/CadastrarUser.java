@@ -79,6 +79,12 @@ public class CadastrarUser extends HttpServlet {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 	
+			if(!Autenticador.autenticar(request, "Get info user")) {
+		    	response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		    	response.getWriter().write("{\"status\": \"erro\", \"mensagem\": \"Acesso Negado\"}");
+		    	return;
+			}
+			
 		    Map<String, String> user = sistema.getUser(request.getParameter("nome"));
 		    
 		    if(user == null) {

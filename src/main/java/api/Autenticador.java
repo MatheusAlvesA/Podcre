@@ -11,12 +11,12 @@ public class Autenticador {
 
 	public static String endPoint = "https://orchestrator-224010.appspot.com/token/validate";
 	
-	public static boolean autenticar(HttpServletRequest r) {
+	public static boolean autenticar(HttpServletRequest r, String nameService) {
 		
 		if(r.getHeader("token-id") == null)
 			return false;
 		
-		if(r.getHeader("token-id") == "frontend_podcre")
+		if(r.getHeader("token-id").equals("frontend_podcre"))
 			return true;
 		
 		if(r.getHeader("client-appspot") == null)
@@ -25,10 +25,10 @@ public class Autenticador {
 		try {
 			
 			String requestBody = "{" + 
-					"	\"service-name\": \"Get info user\",\r\n" + 
-					"	\"client-appspot\": \""+ r.getHeader("client-appspot") +"\",\r\n" + 
-					"	\"server-appspot\": \"podcre-223420\",\r\n" + 
-					"	\"token-id\": \"" + r.getHeader("token-id") + "\"" + 
+					"\"service-name\": \""+ nameService +"\",\n" + 
+					"\"client-appspot\": \""+ r.getHeader("client-appspot") +"\",\n" + 
+					"\"server-appspot\": \"podcre-223420\",\n" + 
+					"\"token-id\": \"" + r.getHeader("token-id") + "\"" + 
 					"}";
 			
 			return sendPOST(Autenticador.endPoint, requestBody);
@@ -43,6 +43,7 @@ public class Autenticador {
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", "Mozilla/5.0");
+		con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
 
 		con.setDoOutput(true);
 		OutputStream os = con.getOutputStream();
